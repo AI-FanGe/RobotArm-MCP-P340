@@ -1,0 +1,45 @@
+[project]
+name = "mycobot-mcp"
+version = "0.1.0"
+description = "MCP Server for controlling ElephantRobotics MyCobot robotic arms via natural language"
+requires-python = ">=3.10"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "MyCobot MCP Contributors", email = ""}
+]
+keywords = ["mcp", "mycobot", "robotics", "elephantrobotics", "robot-arm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "mcp>=1.10.0",
+    "pymycobot>=3.9.0",
+    "pyserial>=3.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/[yourusername]/mycobot-mcp"
+Documentation = "https://github.com/[yourusername]/mycobot-mcp#readme"
+Repository = "https://github.com/[yourusername]/mycobot-mcp.git"
+Issues = "https://github.com/[yourusername]/mycobot-mcp/issues"
+
+[project.scripts]
+mycobot-mcp = "mycobot_mcp.server:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["mycobot_mcp"]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+mycobot_mcp = ["*.json"] 
