@@ -1,11 +1,15 @@
-# MyCobot MCP Server
+# RobotArm MCP P340
+
+[![PyPI version](https://badge.fury.io/py/robotarm-mcp-p340.svg)](https://pypi.org/project/robotarm-mcp-p340/)
+[![Python](https://img.shields.io/pypi/pyversions/robotarm-mcp-p340.svg)](https://pypi.org/project/robotarm-mcp-p340/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [English](#english) | [中文](#chinese)
 
 <a name="english"></a>
 ## Overview
 
-A Model Context Protocol (MCP) server implementation that provides natural language control for ElephantRobotics MyCobot series robotic arms. This server enables controlling robotic arms through conversational AI, making robotics accessible to everyone.
+A Model Context Protocol (MCP) server implementation that provides natural language control for ElephantRobotics MyCobot series robotic arms (especially optimized for ultraArmP340). This server enables controlling robotic arms through conversational AI, making robotics accessible to everyone.
 
 ## Features
 
@@ -81,38 +85,70 @@ The server provides the following control tools:
   - Provides structured guidance for action sequence design
   - Helps design smooth, continuous movements with proper timing
 
-## QuickStart/Usage with MCP Client
+## QuickStart
 
 ### Installation
 
 1. Ensure Python 3.10 is installed
 2. Install dependencies:
 ```bash
-pip install mycobot-mcp
+pip install robotarm-mcp-p340
 ```
 
 ### Configuration for Cursor
 
-There are two methods to configure MCP in Cursor:
+There are three methods to configure MCP in Cursor:
 
-#### Method 1: Direct Python Configuration
+#### Method 1: Python Module Configuration (Recommended for Installed Package)
 
-Add to your Cursor MCP settings:
-
+If you've installed the package via pip:
 ```json
+{
+  "mcpServers": {
+    "mycobot": {
+      "command": "Fill in the python path under the virtual environment folder where robotarm-mcp-p340 is installed",
+      "args": ["-u", "-m", "mycobot_mcp"],
+      "env": {
+        "SIMULATE": "1"
+      }
+    }
+  }
+}
+
+Example:
 
 {
   "mcpServers": {
     "mycobot": {
-      "command": "Fill in the absolute path to the Python interpreter in your conda environment",
+      "command": "D:\\anaconda3\\envs\\test-robotarm\\python.exe",
+      "args": ["-u", "-m", "mycobot_mcp"],
+      "env": {
+        "SIMULATE": "1"
+      }
+    }
+  }
+}
+```
+
+#### Method 2: Development Configuration (For GitHub Clone)
+
+If you've cloned from GitHub and are developing:
+
+```json
+{
+  "mcpServers": {
+    "mycobot": {
+      "command": "Fill in the python path under the project's virtual environment folder",
       "args": [
         "-u",
-        "Fill in the absolute path to the main MCP project file server.py"
+        "-m",
+        "mycobot_mcp"
       ],
       "env": {
         "SIMULATE": "1",
-        "PYTHONPATH": "Fill in the absolute path to the parent folder of the server.py folder"
-      }
+        "PYTHONPATH": "Fill in the absolute path to the src folder"
+      },
+      "cwd": "Fill in the absolute path to the project root"
     }
   }
 }
@@ -125,12 +161,14 @@ Example:
       "command": "D:\\Anaconda3\\envs\\mycobot-mcp\\python.exe",
       "args": [
         "-u",
-        "D:\\AI\\mycobot-mcp\\src\\mycobot_mcp\\server.py"
+        "-m",
+        "mycobot_mcp"
       ],
       "env": {
         "SIMULATE": "1",
         "PYTHONPATH": "D:\\AI\\mycobot-mcp\\src"
-      }
+      },
+      "cwd": "D:\\AI\\mycobot-mcp"
     }
   }
 }
@@ -138,11 +176,12 @@ Example:
 
 **Important Notes:**
 - "SIMULATE": "1" is for simulation testing without hardware. For real device testing, set SIMULATE to "0"
+- Method 2 requires installing the project dependencies from requirements.txt in the project's virtual environment
 - Must use `-u` flag to disable Python output buffering
 - Set `PYTHONPATH` to include the src directory
 - Adjust paths according to your installation
 
-#### Method 2: Batch File Configuration (Windows)
+#### Method 3: Batch File Configuration (Windows)
 
 1. Create a batch file `start_mcp_server.bat`:
 ```batch
@@ -150,7 +189,7 @@ Example:
 cd /d D:\AI\mycobot-mcp
 set PYTHONPATH=D:\AI\mycobot-mcp\src
 set SIMULATE=1
-D:\Anaconda3\envs\mycobot-mcp\python.exe -u src\mycobot_mcp\server.py
+D:\Anaconda3\envs\mycobot-mcp\python.exe -u -m mycobot_mcp
 ```
 
 2. Configure Cursor:
@@ -216,16 +255,31 @@ If tools don't load properly:
    - View → Output → Select "MCP" channel
    - Look for error messages
 
-2. **Test server communication:**
-   ```python
-   python test_mcp_stdio.py
+2. **Test the server locally:**
+   ```bash
+   # For installed package
+   python -m mycobot_mcp
+   
+   # For development (from project root)
+   cd D:\AI\mycobot-mcp
+   set PYTHONPATH=src
+   python -m mycobot_mcp
    ```
 
-3. **Common issues:**
-   - ❌ Don't run server directly: `python server.py`
-   - ✅ Let MCP client manage the server lifecycle
-   - ✅ Ensure Python path includes `-u` flag
-   - ✅ Set PYTHONPATH environment variable
+3. **Common issues and solutions:**
+   - **"No module named 'mycobot_mcp'"**: 
+     - For development: Ensure `PYTHONPATH` includes the `src` folder
+     - For installed: Run `pip install -e .` from project root
+   
+   - **"Tools not loading"**:
+     - Check that you're using `-m mycobot_mcp` not `-m mycobot_mcp.server`
+     - Verify the `cwd` is set to project root in development mode
+   
+   - **Configuration tips:**
+     - ✅ Always use `-u` flag for unbuffered output
+     - ✅ Set `PYTHONPATH` to `src` folder (not `src/mycobot_mcp`)
+     - ✅ Use `cwd` to set working directory for development
+     - ❌ Don't run `server.py` directly
 
 ## Safety Guidelines
 
@@ -247,7 +301,7 @@ This MCP server is licensed under the MIT License. See LICENSE file for details.
 <a name="chinese"></a>
 ## 概述
 
-MyCobot MCP Server 是一个基于模型上下文协议（MCP）的服务器实现，为大象机器人 MyCobot 系列机械臂提供自然语言控制功能。通过对话式 AI 控制机械臂，让机器人技术人人可用。
+RobotArm MCP P340 是一个基于模型上下文协议（MCP）的服务器实现，为大象机器人 MyCobot 系列机械臂提供自然语言控制功能（特别针对 ultraArmP340 进行了优化）。通过对话式 AI 控制机械臂，让机器人技术人人可用。
 
 ## 功能特点
 
@@ -330,34 +384,66 @@ MyCobot MCP Server 是一个基于模型上下文协议（MCP）的服务器实�
 1. 确保已安装 Python 3.10
 2. 安装依赖：
 ```bash
-pip install mycobot-mcp
+pip install robotarm-mcp-p340
 ```
 
 ### Cursor 配置方法
 
-有两种方法在 Cursor 中配置 MCP：
+有三种方法在 Cursor 中配置 MCP：
 
-#### 方法 1：直接 Python 配置
+#### 方法 1：Python 模块配置（推荐用于已安装的包）
 
-在 Cursor MCP 设置中添加：
-
+如果您已通过 pip 安装了包：
 ```json
+{
+  "mcpServers": {
+    "mycobot": {
+      "command": "填写安装了robotarm-mcp-p340的虚拟环境文件夹下的python路径",
+      "args": ["-u", "-m", "mycobot_mcp"],
+      "env": {
+        "SIMULATE": "1"
+      }
+    }
+  }
+}
+
+示例如下：
 
 {
   "mcpServers": {
     "mycobot": {
-      "command": "填写你运行项目的conda环境下的python解释器目录的绝对路径",
-      "args": [
-        "-u",
-        "填写开发的mcp项目主文件server.py的绝对路径"
-      ],
+      "command": "D:\\anaconda3\\envs\\test-robotarm\\python.exe",
+      "args": ["-u", "-m", "mycobot_mcp"],
       "env": {
-        "SIMULATE": "1",
-        "PYTHONPATH": "填写server.py所在文件夹的上一级文件夹绝对路径"
+        "SIMULATE": "1"
       }
     }
   }
-} 
+}
+```
+
+#### 方法 2：开发配置（用于从 GitHub 克隆的项目）
+
+如果您从 GitHub 克隆并正在开发：
+
+```json
+{
+  "mcpServers": {
+    "mycobot": {
+      "command": "填写安装了该项目虚拟环境文件夹下的python路径",
+      "args": [
+        "-u",
+        "-m",
+        "mycobot_mcp"
+      ],
+      "env": {
+        "SIMULATE": "1",
+        "PYTHONPATH": "填写 src 文件夹的绝对路径"
+      },
+      "cwd": "填写项目根目录的绝对路径"
+    }
+  }
+}
 
 示例如下：
 
@@ -367,12 +453,14 @@ pip install mycobot-mcp
       "command": "D:\\Anaconda3\\envs\\mycobot-mcp\\python.exe",
       "args": [
         "-u",
-        "D:\\AI\\mycobot-mcp\\src\\mycobot_mcp\\server.py"
+        "-m",
+        "mycobot_mcp"
       ],
       "env": {
         "SIMULATE": "1",
         "PYTHONPATH": "D:\\AI\\mycobot-mcp\\src"
-      }
+      },
+      "cwd": "D:\\AI\\mycobot-mcp"
     }
   }
 }
@@ -380,11 +468,13 @@ pip install mycobot-mcp
 
 **重要说明：**
 - "SIMULATE": "1"为无硬件设备的模拟测试，实机测试需要把SIMULATE值设置为"0"
+- 方法二需要在项目虚拟环境中安装requirements.txt中的项目依赖
 - 必须使用 `-u` 参数禁用 Python 输出缓冲
 - 设置 `PYTHONPATH` 包含 src 目录
 - 根据您的安装路径调整路径
 
-#### 方法 2：批处理文件配置（Windows）
+
+#### 方法 3：批处理文件配置（Windows）
 
 1. 创建批处理文件 `start_mcp_server.bat`：
 ```batch
@@ -392,7 +482,7 @@ pip install mycobot-mcp
 cd /d D:\AI\mycobot-mcp
 set PYTHONPATH=D:\AI\mycobot-mcp\src
 set SIMULATE=1
-D:\Anaconda3\envs\mycobot-mcp\python.exe -u src\mycobot_mcp\server.py
+D:\Anaconda3\envs\mycobot-mcp\python.exe -u -m mycobot_mcp
 ```
 
 2. 配置 Cursor：
@@ -424,12 +514,12 @@ D:\Anaconda3\envs\mycobot-mcp\python.exe -u src\mycobot_mcp\server.py
 
 1. **连接机器人：**
    - "连接我的 ultraArm P340 机械臂"
-   - "初始化 COM3 端口的机器人" (需要根据自己设备连接的COM端口是多少去更改数字，这里预设是3)
+   - "初始化 COM3 端口的机器人"（根据您设备的实际 COM 端口调整数字，默认是 3）
 
 2. **基础运动：**
-   - "移动机械臂到坐标 [200, 0, 150]"
+   - "移动机械臂到位置 [200, 0, 150]"
    - "设置关节角度为 [45, 30, -20]"
-   - "回到原点"
+   - "回到零位"
 
 3. **夹爪控制：**
    - "打开夹爪"
@@ -440,7 +530,7 @@ D:\Anaconda3\envs\mycobot-mcp\python.exe -u src\mycobot_mcp\server.py
    - "用机械臂逗猫"
    - "在桌上画个圆"
    - "演示如何写汉字"
-   - "让机器人跳舞"
+   - "让机器人跟着音乐跳舞"
    - "创建一个自定义的挥手动作序列"
 
 ### 开发模式
@@ -459,16 +549,31 @@ set SIMULATE=1     # Windows
    - 视图 → 输出 → 选择 "MCP" 通道
    - 查看错误信息
 
-2. **测试服务器通信：**
-   ```python
-   python test_mcp_stdio.py
+2. **本地测试服务器：**
+   ```bash
+   # 对于已安装的包
+   python -m mycobot_mcp
+   
+   # 对于开发模式（从项目根目录）
+   cd D:\AI\mycobot-mcp
+   set PYTHONPATH=src
+   python -m mycobot_mcp
    ```
 
-3. **常见问题：**
-   - ❌ 不要直接运行服务器：`python server.py`
-   - ✅ 让 MCP 客户端管理服务器生命周期
-   - ✅ 确保 Python 命令包含 `-u` 参数
-   - ✅ 设置 PYTHONPATH 环境变量
+3. **常见问题和解决方案：**
+   - **"No module named 'mycobot_mcp'"**：
+     - 开发模式：确保 `PYTHONPATH` 包含 `src` 文件夹
+     - 已安装：从项目根目录运行 `pip install -e .`
+   
+   - **"工具未加载"**：
+     - 检查是否使用 `-m mycobot_mcp` 而不是 `-m mycobot_mcp.server`
+     - 验证开发模式下 `cwd` 设置为项目根目录
+   
+   - **配置提示：**
+     - ✅ 始终使用 `-u` 标志实现无缓冲输出
+     - ✅ 设置 `PYTHONPATH` 为 `src` 文件夹（而不是 `src/mycobot_mcp`）
+     - ✅ 使用 `cwd` 为开发设置工作目录
+     - ❌ 不要再直接运行 `server.py`
 
 ## 安全指南
 

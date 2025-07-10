@@ -1,20 +1,25 @@
-# Contributing to MyCobot MCP
+# Contributing to RobotArm MCP P340
 
-Thank you for your interest in contributing to MyCobot MCP!
+Thank you for your interest in contributing to RobotArm MCP P340!
 
 ## Development Setup
 
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/[yourusername]/mycobot-mcp.git
-   cd mycobot-mcp
+   git clone https://github.com/AI-FanGe/RobotArm-MCP-P340.git
+   cd RobotArm-MCP-P340
    ```
 
 3. Create a virtual environment:
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+or use Ananaconda to create an environment
+      ```bash
+   conda create -n mycobot-mcp python=3.10 -y
+   conda activate mycobot-mcp
    ```
 
 4. Install dependencies:
@@ -32,7 +37,7 @@ Thank you for your interest in contributing to MyCobot MCP!
 Test in simulation mode:
 ```bash
 export SIMULATE=1  # On Windows: set SIMULATE=1
-python -m mycobot_mcp.server
+python -m mycobot_mcp
 ```
 
 ## Code Style

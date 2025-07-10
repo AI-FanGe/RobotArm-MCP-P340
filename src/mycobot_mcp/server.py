@@ -549,16 +549,7 @@ actions = [
 请根据任务 "{task_description}" 设计创意动作序列！
 """
 
-# 主函数
-def main():
-    """启动 MCP 服务器"""
+# 自动初始化（模拟模式）
+if SIMULATE:
     logger.info(f"启动 MyCobot MCP 服务器 (模拟模式: {SIMULATE})")
-    
-    # 自动初始化（模拟模式）
-    if SIMULATE:
-        initialize_robot()
-    
-    mcp.run(transport="stdio")
-
-if __name__ == "__main__":
-    main()
+    initialize_robot()

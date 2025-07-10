@@ -1,12 +1,13 @@
 [project]
-name = "mycobot-mcp"
+name = "robotarm-mcp-p340"
 version = "0.1.0"
 description = "MCP Server for controlling ElephantRobotics MyCobot robotic arms via natural language"
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "MyCobot MCP Contributors", email = ""}
+    {name = "FanGe", email = "archifancy@gmail.com"},
+    {name = "guoyuaarg", email = "aargwangguoyu@outlook.com"}
 ]
 keywords = ["mcp", "mycobot", "robotics", "elephantrobotics", "robot-arm"]
 classifiers = [
@@ -25,13 +26,13 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/[yourusername]/mycobot-mcp"
-Documentation = "https://github.com/[yourusername]/mycobot-mcp#readme"
-Repository = "https://github.com/[yourusername]/mycobot-mcp.git"
-Issues = "https://github.com/[yourusername]/mycobot-mcp/issues"
+Homepage = "https://github.com/AI-FanGe/RobotArm-MCP-P340"
+Documentation = "https://github.com/AI-FanGe/RobotArm-MCP-P340#readme"
+Repository = "https://github.com/AI-FanGe/RobotArm-MCP-P340.git"
+Issues = "https://github.com/AI-FanGe/RobotArm-MCP-P340/issues"
 
 [project.scripts]
-mycobot-mcp = "mycobot_mcp.server:main"
+robotarm-mcp-p340 = "mycobot_mcp:main"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]

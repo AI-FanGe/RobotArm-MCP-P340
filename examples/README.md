@@ -1,4 +1,4 @@
-# MyCobot MCP Examples
+# RobotArm MCP P340 Examples
 
 This directory contains examples and guides for using the MyCobot MCP server.
 

@@ -2,7 +2,7 @@
   "mcpServers": {
     "mycobot": {
       "command": "python",
-      "args": ["-u", "-m", "mycobot_mcp.server"],
+      "args": ["-u", "-m", "mycobot_mcp"],
       "env": {
         "SIMULATE": "1"
       }
